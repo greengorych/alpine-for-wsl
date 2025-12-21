@@ -1,0 +1,138 @@
+name: Build and release Alpine for WSL
+
+on:
+  push:
+    tags:
+      - "*.*.*-*"
+
+run-name: Build and release Alpine ${{ github.ref_name }}
+
+jobs:
+  build-alpine-distributions:
+    name: Build Alpine ${{ github.ref_name }} for ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
+    strategy:
+      matrix:
+        arch:
+          - x86_64
+          - aarch64
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Define variables
+        run: |
+          set -euo pipefail
+
+          ALPINE_RELEASE="${RELEASE_TAG}"
+          ALPINE_VERSION="${RELEASE_TAG%-*}"
+          ALPINE_BRANCH="${RELEASE_TAG%.*}"
+          ALPINE_ROOTFS="alpine-minirootfs-${ALPINE_VERSION}-${{ matrix.arch }}.tar.gz"
+          ALPINE_ROOTFS_SHA="${ALPINE_ROOTFS}.sha256"
+          ALPINE_ROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_BRANCH}/releases/${{ matrix.arch }}/${ALPINE_ROOTFS}"
+          ALPINE_ROOTFS_SHA_URL="${ALPINE_ROOTFS_URL}.sha256"
+
+          {
+            echo "ALPINE_RELEASE=$ALPINE_RELEASE"
+            echo "ALPINE_VERSION=$ALPINE_VERSION"
+            echo "ALPINE_BRANCH=$ALPINE_BRANCH"
+            echo "ALPINE_ROOTFS=$ALPINE_ROOTFS"
+            echo "ALPINE_ROOTFS_SHA=$ALPINE_ROOTFS_SHA"
+            echo "ALPINE_ROOTFS_URL=$ALPINE_ROOTFS_URL"
+            echo "ALPINE_ROOTFS_SHA_URL=$ALPINE_ROOTFS_SHA_URL"
+          } >> "$GITHUB_ENV"
+
+      - name: Install arm64 dependencies
+        if: matrix.arch == 'aarch64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static binfmt-support
+          sudo update-binfmts --enable qemu-aarch64
+
+      - name: Download and verify distribution
+        run: |
+          set -euo pipefail
+          wget ${{ env.ALPINE_ROOTFS_URL }}
+          wget ${{ env.ALPINE_ROOTFS_SHA_URL }}
+          sha256sum -c ${{ env.ALPINE_ROOTFS_SHA }}
+
+      - name: Prepare distribution
+        run: |
+          set -euo pipefail
+          mkdir ${{ matrix.arch }}
+          sudo tar -xzf ${{ env.ALPINE_ROOTFS }} -C ${{ matrix.arch }}
+          sudo cp /etc/resolv.conf ${{ matrix.arch }}/etc/resolv.conf
+
+      - name: Add arm64 specific build dependency
+        if: matrix.arch == 'aarch64'
+        run: |
+          sudo cp /usr/bin/qemu-aarch64-static ${{ matrix.arch }}/usr/bin/
+
+      - name: Update distribution and install additional packages
+        run: |
+          set -euo pipefail
+          sudo chroot ${{ matrix.arch }} apk update
+          sudo chroot ${{ matrix.arch }} apk upgrade
+          sudo chroot ${{ matrix.arch }} apk add --no-cache $(grep -Ev '^\s*(#|$)' wsl-configs/apk-install.list)
+
+
+      - name: Render WSL configs
+        run: |
+
+
+      - name: Set up distribution
+        run: |
+          set -euo pipefail
+
+          sudo mkdir -p ${{ matrix.arch }}/usr/share/wsl
+
+          sudo cp wsl-configs/alpine.ico ${{ matrix.arch }}/usr/share/wsl/alpine.ico
+          sudo cp wsl-configs/wsl.conf ${{ matrix.arch }}/etc/
+          sudo cp wsl-configs/wsl-distribution.conf ${{ matrix.arch }}/etc/
+
+          sudo chmod 644 ${{ matrix.arch }}/etc/wsl.conf
+          sudo chmod 644 ${{ matrix.arch }}/etc/wsl-distribution.conf
+          sudo chmod 644 ${{ matrix.arch }}/usr/share/wsl/alpine.ico
+
+      - name: Pack distribution
+        run: |
+          sudo tar -cf - \
+            --numeric-owner \
+            --exclude-from=wsl-configs/tar-exclude.list \
+            -C ${{ matrix.arch }} . \
+            | gzip -9 > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
+          sha256sum alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}
+          path: |
+            alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
+            alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
+
+  release-alpine-distributions:
+    name: Release Alpine ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    needs: build-alpine-distributions
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v7
+
+      - name: Release Alpine distributions ${{ github.ref_name }}
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            alpine-${{ github.ref_name }}-*/alpine-${{ github.ref_name }}-*.wsl
+            alpine-${{ github.ref_name }}-*/alpine-${{ github.ref_name }}-*.wsl.sha256
