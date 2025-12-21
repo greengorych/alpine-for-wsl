@@ -1,0 +1,11 @@
+proc
+sys
+dev
+run
+tmp
+var/tmp
+var/log
+var/cache/apk
+etc/resolv.conf
+root/.ash_history
+usr/bin/qemu-aarch64-static
