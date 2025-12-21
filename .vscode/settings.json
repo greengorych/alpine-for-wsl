@@ -1,0 +1,18 @@
+{
+  "files.associations": {
+    "99_wsl.cfg": "yaml",
+    "wsl.conf": "ini",
+    "wsl-distribution.conf": "ini"
+  },
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "[markdown]": {
+    "editor.wordWrap": "on"
+  }
+}
