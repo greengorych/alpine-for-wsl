@@ -9,7 +9,7 @@ run-name: Build and release Alpine ${{ github.ref_name }}
 
 jobs:
   build-alpine-distributions:
-    name: Build Alpine ${{ github.ref_name }} for ${{ matrix.arch }}
+    name: Build Alpine ${{ github.ref_name }} ${{ matrix.arch }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,6 +57,7 @@ jobs:
       - name: Download and verify distribution
         run: |
           set -euo pipefail
+
           wget ${{ env.ALPINE_ROOTFS_URL }}
           wget ${{ env.ALPINE_ROOTFS_SHA_URL }}
           sha256sum -c ${{ env.ALPINE_ROOTFS_SHA }}
@@ -64,6 +65,7 @@ jobs:
       - name: Prepare distribution
         run: |
           set -euo pipefail
+
           mkdir ${{ matrix.arch }}
           sudo tar -xzf ${{ env.ALPINE_ROOTFS }} -C ${{ matrix.arch }}
           sudo cp /etc/resolv.conf ${{ matrix.arch }}/etc/resolv.conf
@@ -76,14 +78,10 @@ jobs:
       - name: Update distribution and install additional packages
         run: |
           set -euo pipefail
+
           sudo chroot ${{ matrix.arch }} apk update
           sudo chroot ${{ matrix.arch }} apk upgrade
           sudo chroot ${{ matrix.arch }} apk add --no-cache $(grep -Ev '^\s*(#|$)' wsl-configs/apk-install.list)
-
-
-      - name: Render WSL configs
-        run: |
-
 
       - name: Set up distribution
         run: |
@@ -101,6 +99,8 @@ jobs:
 
       - name: Pack distribution
         run: |
+          set -euo pipefail
+          
           sudo tar -cf - \
             --numeric-owner \
             --exclude-from=wsl-configs/tar-exclude.list \
