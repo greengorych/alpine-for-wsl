@@ -93,11 +93,13 @@ jobs:
           sudo mkdir -p ${{ matrix.arch }}/usr/share/wsl
 
           sudo cp wsl-configs/etc/fstab ${{ matrix.arch }}/etc/
+          sudo cp wsl-configs/etc/profile ${{ matrix.arch }}/etc/
           sudo cp wsl-configs//usr/share/wsl/alpine.ico ${{ matrix.arch }}/usr/share/wsl/
           sudo cp wsl-configs/etc/wsl.conf ${{ matrix.arch }}/etc/
           sudo cp wsl-configs/etc/wsl-distribution.conf ${{ matrix.arch }}/etc/
 
           sudo chmod 644 ${{ matrix.arch }}/etc/fstab
+          sudo chmod 644 ${{ matrix.arch }}/etc/profile
           sudo chmod 644 ${{ matrix.arch }}/etc/wsl.conf
           sudo chmod 644 ${{ matrix.arch }}/etc/wsl-distribution.conf
           sudo chmod 644 ${{ matrix.arch }}/usr/share/wsl/alpine.ico
