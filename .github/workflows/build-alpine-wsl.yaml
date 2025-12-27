@@ -106,7 +106,7 @@ jobs:
 
           sudo tar -cf - \
             --numeric-owner \
-            --exclude-from=wsl-configs/tar-exclude.list \
+            --exclude-from=wsl-configs/exclude.list \
             -C ${{ matrix.arch }} . \
             | gzip -9 > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
           sha256sum alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
