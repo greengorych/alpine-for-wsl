@@ -1,0 +1,20 @@
+# Sysinit level services
+
+devfs sysinit
+dmesg sysinit
+hwdrivers sysinit
+mdevd sysinit
+mdevd-init sysinit
+
+# Boot level services
+
+bootmisc boot
+hostname boot
+hwclock boot
+machine-id boot
+modules boot
+syslog boot
+
+# Default level services
+
+crond default
