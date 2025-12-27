@@ -9,6 +9,7 @@ mdevd-init sysinit
 # Boot level services
 
 bootmisc boot
+cloud-init-local boot
 hostname boot
 hwclock boot
 machine-id boot
@@ -17,4 +18,7 @@ syslog boot
 
 # Default level services
 
+cloud-config default
+cloud-final default
+cloud-init default
 crond default
