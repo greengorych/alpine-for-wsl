@@ -10,8 +10,8 @@ This project provides a ready-to-use Alpine Linux distribution for the Windows S
 
 - Based on the official Alpine Linux mini root filesystem
 - Designed for WSL 2
-- OpenRC init system with automatic startup when the WSL instance launches
-- `cloud-init` configured with the WSL data source for automatic first-boot configuration
+- OpenRC init system with automatic startup
+- cloud-init configured with the WSL data source
 - System logging (dmesg, syslog) with log rotation
 - Built-in task scheduler (cron)
 
