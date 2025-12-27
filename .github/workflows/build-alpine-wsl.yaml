@@ -58,8 +58,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          wget ${{ env.ALPINE_ROOTFS_URL }}
-          wget ${{ env.ALPINE_ROOTFS_SHA_URL }}
+          wget -O ${{ env.ALPINE_ROOTFS }} ${{ env.ALPINE_ROOTFS_URL }}
+          wget -O ${{ env.ALPINE_ROOTFS_SHA }} ${{ env.ALPINE_ROOTFS_SHA_URL }}
           sha256sum -c ${{ env.ALPINE_ROOTFS_SHA }}
 
       - name: Prepare distribution
@@ -97,7 +97,7 @@ jobs:
           sudo cp wsl-configs/etc/wsl.conf ${{ matrix.arch }}/etc/
           sudo cp wsl-configs/etc/wsl-distribution.conf ${{ matrix.arch }}/etc/
           sudo cp wsl-configs/etc/cloud/cloud.cfg.d/99_wsl.cfg ${{ matrix.arch }}/etc/cloud/cloud.cfg.d/
-          sudo cp wsl-configs/usr/share/wsl/alpine.ico ${{ matrix.arch }}/usr/share/wsl/
+          sudo cp wsl-configs/usr/share/wsl/alpine.ico ${{ matrix.arch }}/usr/share/wsl/alpine.ico
 
           sudo chmod 644 ${{ matrix.arch }}/etc/fstab
           sudo chmod 644 ${{ matrix.arch }}/etc/profile
