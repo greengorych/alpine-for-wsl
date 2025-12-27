@@ -1,3 +1,15 @@
+alpine-baselayout
+alpine-keys
+alpine-release
+apk-tools
 bash
+busybox
+busybox-openrc
 ca-certificates
+logrotate
+mdevd
+musl-utils
+openssh-client
+openssl
+sudo
 tzdata
