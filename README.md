@@ -1,42 +1,46 @@
 # Alpine Linux for WSL
 
-This project provides an Alpine Linux distribution for the Windows Subsystem for Linux (WSL).
+This project provides a ready-to-use Alpine Linux distribution for the Windows Subsystem for Linux (WSL).
 
 > [!IMPORTANT]
-> - This distribution is in the development and testing stage and has limited functionality.
-> - The arm64 distribution has not been tested.
+> - The distribution is still under active development and testing and may have limited functionality.
+> - The arm64 build has not yet been fully tested.
 
 ## Features
 
-- Based on the official Alpine Linux mini root filesystem.
-- Designed for WSL 2.
+- Based on the official Alpine Linux mini root filesystem
+- Designed for WSL 2
+- OpenRC init system with automatic startup when the WSL instance launches
+- `cloud-init` configured with the WSL data source for automatic first-boot configuration
+- System logging (dmesg, syslog) with log rotation
+- Built-in task scheduler (cron)
 
 ## Requirements
 
-- Windows 10 (version 1903 or later) or Windows 11.
+- Windows 10 version 1903 or newer, or Windows 11
 - Windows Subsystem for Linux (WSL 2).
 
 ## Installation options
 
 ### Manual installation
 
-Download the distribution of the required architecture and install it by double-clicking.
+Download the distribution for your architecture and install it by double-clicking the file.
 
 ### Manual installation with commands
 
-Download the distribution of the required architecture and install it using the command:
+Download the image for your architecture and install it with:
 
 ``` powershell
-wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.23.2-1-x86_64.wsl
+wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.23.2-3-x86_64.wsl
 ```
 
-### Using an additional WSL distribution list
+### Using an additional WSL distributions list
 
-An unofficial, ready-to-use list provides additional WSL distributions that are not included in the official list.
+You can also install Alpine from an unofficial community list of additional WSL distributions.
 
-To register the list, use the following commands.
+To register the list, run the following commands as Administrator.
 
-Powershell (as Administrator):
+Powershell:
 
 ``` powershell
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" `
@@ -45,7 +49,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" `
   -Type String -Force
 ```
 
-Command Prompt (as Administrator):
+Command Prompt:
 
 ``` batch
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" ^
@@ -55,13 +59,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" ^
 /f
 ```
 
-After registering, the distributions available for installation can be checked using the command:
+After adding the list, view available distributions:
 
 ``` powershell
 wsl --list --online
 ```
 
-If Alpine appears in the output, install it using the command:
+If Alpine appears in the list, install it with:
 
 ``` powershell
 wsl --install Alpine
@@ -72,18 +76,17 @@ wsl --install Alpine
 
 ### Contributing
 
-Feel free to open issues and suggest improvements.
+Issues, bug reports, and improvement suggestions are welcome.
 
 ## Licensing
 
 ### Project License
 
-The code and configuration files in this repository are licensed under the [MIT license][MIT license].
+The code and configuration in this repository are licensed under the [MIT license][MIT license].
 
 ### Alpine Linux and Third-Party Software
 
-Alpine Linux is a Linux distribution composed of software licensed under
-various open source licenses, including GPL, LGPL, MIT, BSD, and others.
+Alpine Linux consists of software distributed under various open-source licenses (GPL, LGPL, MIT, BSD, and others).
 
 This project distributes Alpine Linux packages without modification.
 
