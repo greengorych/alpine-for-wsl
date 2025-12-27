@@ -6,6 +6,8 @@ bash
 busybox
 busybox-openrc
 ca-certificates
+cloud-init
+e2fsprogs-extra
 logrotate
 mdevd
 musl-utils
