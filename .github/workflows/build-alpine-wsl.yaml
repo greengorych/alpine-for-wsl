@@ -79,7 +79,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          sudo cp wsl-configs/world ${{ matrix.arch }}/etc/apk/
+          sudo cp wsl-configs/etc/apk/world ${{ matrix.arch }}/etc/apk/
           sudo chmod 644 ${{ matrix.arch }}/etc/apk/world
 
           sudo chroot ${{ matrix.arch }} apk update
