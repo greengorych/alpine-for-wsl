@@ -92,7 +92,7 @@ jobs:
 
           sudo mkdir -p ${{ matrix.arch }}/usr/share/wsl
 
-          sudo cp wsl-configs/alpine.ico ${{ matrix.arch }}/usr/share/wsl/alpine.ico
+          sudo cp wsl-configs//usr/share/wsl/alpine.ico ${{ matrix.arch }}/usr/share/wsl/
           sudo cp wsl-configs/etc/wsl.conf ${{ matrix.arch }}/etc/
           sudo cp wsl-configs/etc/wsl-distribution.conf ${{ matrix.arch }}/etc/
 
