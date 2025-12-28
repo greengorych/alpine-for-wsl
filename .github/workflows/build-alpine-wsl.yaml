@@ -75,36 +75,28 @@ jobs:
         run: |
           sudo cp /usr/bin/qemu-aarch64-static ${{ matrix.arch }}/usr/bin/
 
-      - name: Update distribution and install additional packages
-        run: |
-          set -euo pipefail
-
-          sudo cp wsl-configs/etc/apk/world ${{ matrix.arch }}/etc/apk/
-          sudo chmod 644 ${{ matrix.arch }}/etc/apk/world
-
-          sudo chroot ${{ matrix.arch }} apk update
-          sudo chroot ${{ matrix.arch }} apk upgrade
-          sudo chroot ${{ matrix.arch }} apk fix
-
       - name: Set up distribution
         run: |
           set -euo pipefail
 
-          sudo mkdir -p ${{ matrix.arch }}/usr/share/wsl
+          sudo chroot ${{ matrix.arch }} apk update
+          sudo chroot ${{ matrix.arch }} apk upgrade
 
-          sudo cp wsl-configs/etc/fstab ${{ matrix.arch }}/etc/
-          sudo cp wsl-configs/etc/profile ${{ matrix.arch }}/etc/
-          sudo cp wsl-configs/etc/wsl.conf ${{ matrix.arch }}/etc/
-          sudo cp wsl-configs/etc/wsl-distribution.conf ${{ matrix.arch }}/etc/
-          sudo cp wsl-configs/etc/cloud/cloud.cfg.d/99_wsl.cfg ${{ matrix.arch }}/etc/cloud/cloud.cfg.d/
-          sudo cp wsl-configs/usr/share/wsl/alpine.ico ${{ matrix.arch }}/usr/share/wsl/alpine.ico
+          sudo install -D -m 644 "alpine/etc/apk/world" "${{ matrix.arch }}/etc/apk/world"
 
-          sudo chmod 644 ${{ matrix.arch }}/etc/fstab
-          sudo chmod 644 ${{ matrix.arch }}/etc/profile
-          sudo chmod 644 ${{ matrix.arch }}/etc/wsl.conf
-          sudo chmod 644 ${{ matrix.arch }}/etc/wsl-distribution.conf
-          sudo chmod 644 ${{ matrix.arch }}/etc/cloud/cloud.cfg.d/99_wsl.cfg
-          sudo chmod 644 ${{ matrix.arch }}/usr/share/wsl/alpine.ico
+          sudo chroot ${{ matrix.arch }} apk fix
+
+          while read -r source destination mode; do
+
+            [ -z "$source" ] && continue
+
+            case "$source" in
+              \#*) continue ;;
+            esac
+
+            sudo install -D -m "$mode" "alpine/$source" "${{ matrix.arch }}$destination"
+
+          done < meta/files.list
 
           sudo chroot "${{ matrix.arch }}" ln -sf /init /usr/bin/wslinfo
           sudo chroot "${{ matrix.arch }}" ln -sf /init /usr/bin/wslpath
@@ -131,7 +123,7 @@ jobs:
 
             sudo chroot ${{ matrix.arch }} rc-update add "$service" "$runlevel"
 
-          done < wsl-configs/service.list
+          done < meta/services.list
 
       - name: Pack distribution
         run: |
@@ -139,7 +131,7 @@ jobs:
 
           sudo tar -cf - \
             --numeric-owner \
-            --exclude-from=wsl-configs/exclude.list \
+            --exclude-from=meta/excludes.list \
             -C ${{ matrix.arch }} . \
             | gzip -9 > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
           sha256sum alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
