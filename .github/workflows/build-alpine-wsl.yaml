@@ -5,7 +5,7 @@ on:
     tags:
       - "3.23.[0-9]+-[0-9]+"
 
-run-name: Build and release Alpine ${{ github.ref_name }}
+run-name: Build and Release Alpine ${{ github.ref_name }}
 
 jobs:
   build-alpine-distributions:
@@ -144,18 +144,65 @@ jobs:
             alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
             alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
 
+  validate-alpine-distributions:
+    name: Validate Alpine ${{ github.ref_name }} ${{ matrix.arch }}
+    needs: build-alpine-distributions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        arch:
+          - x86_64
+          - aarch64
+
+    steps:
+      - name: Download artifacts Alpine ${{ github.ref_name }} ${{ matrix.arch }}
+        uses: actions/download-artifact@v7
+        with:
+          name: alpine-${{ github.ref_name }}-${{ matrix.arch }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - name: Validate Alpine ${{ github.ref_name }} aarch64
+        if: matrix.arch == 'aarch64'
+        run: |
+          set -euo pipefail
+
+          wget -O validate-modern.py https://raw.githubusercontent.com/microsoft/WSL/master/distributions/validate-modern.py
+          wget -O requirements.txt https://raw.githubusercontent.com/microsoft/WSL/master/distributions/requirements.txt
+
+          pip install -r requirements.txt
+
+          python "validate-modern.py" --arm64 --tar "alpine-${{ github.ref_name }}-${{ matrix.arch }}.wsl"
+
+      - name: Validate Alpine ${{ github.ref_name }} aarch64
+        if: matrix.arch == 'x86_64'
+        run: |
+          set -euo pipefail
+
+          wget -O validate-modern.py https://raw.githubusercontent.com/microsoft/WSL/master/distributions/validate-modern.py
+          wget -O requirements.txt https://raw.githubusercontent.com/microsoft/WSL/master/distributions/requirements.txt
+
+          pip install -r requirements.txt
+
+          python "validate-modern.py" --tar "alpine-${{ github.ref_name }}-${{ matrix.arch }}.wsl"
+
   release-alpine-distributions:
     name: Release Alpine ${{ github.ref_name }}
+    needs: validate-alpine-distributions
     runs-on: ubuntu-latest
-    needs: build-alpine-distributions
     permissions:
       contents: write
 
     steps:
-      - name: Download artifacts
+      - name: Download artifacts Alpine ${{ github.ref_name }}
         uses: actions/download-artifact@v7
 
-      - name: Release Alpine distributions ${{ github.ref_name }}
+      - name: Release Alpine ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
