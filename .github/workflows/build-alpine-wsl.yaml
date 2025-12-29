@@ -113,14 +113,6 @@ jobs:
               \#*) continue ;;
             esac
 
-            sudo chroot ${{ matrix.arch }} sh -c "
-              if [ -f /etc/init.d/$service ] && \
-                grep -q 'keyword.*-wsl' /etc/init.d/$service;
-              then
-                sed -i 's/ -wsl//g' /etc/init.d/$service
-              fi
-            "
-
             sudo chroot ${{ matrix.arch }} rc-update add "$service" "$runlevel"
 
           done < meta/services.list
