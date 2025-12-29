@@ -3,6 +3,7 @@
 etc/cloud/cloud.cfg.d/99_wsl.cfg    /etc/cloud/cloud.cfg.d/99_wsl.cfg   644
 etc/fstab                           /etc/fstab                          644
 etc/profile                         /etc/profile                        644
+etc/rc.conf                         /etc/rc.conf                        644
 etc/wsl.conf                        /etc/wsl.conf                       644
 etc/wsl-distribution.conf           /etc/wsl-distribution.conf          644
 usr/share/wsl/alpine.ico            /usr/share/wsl/alpine.ico           644
