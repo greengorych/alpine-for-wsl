@@ -3,6 +3,7 @@ alpine-keys
 alpine-release
 apk-tools
 bash
+bash-completion
 busybox
 busybox-openrc
 ca-certificates
