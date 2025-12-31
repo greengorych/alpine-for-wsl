@@ -11,6 +11,9 @@ jobs:
   build-alpine-distributions:
     name: Build Alpine ${{ github.ref_name }} ${{ matrix.arch }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     permissions:
       contents: read
     env:
@@ -139,6 +142,9 @@ jobs:
   validate-alpine-distributions:
     name: Validate Alpine ${{ github.ref_name }} ${{ matrix.arch }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     needs: build-alpine-distributions
     permissions:
       contents: read
@@ -178,6 +184,9 @@ jobs:
   release-alpine-distributions:
     name: Release Alpine ${{ github.ref_name }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     needs: validate-alpine-distributions
     permissions:
       contents: write
