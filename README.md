@@ -12,7 +12,7 @@ This project provides a ready-to-use Alpine Linux distribution for the Windows S
 - Designed for WSL 2
 - OpenRC init system with automatic startup
 - cloud-init configured with the WSL data source
-- System logging (dmesg, syslog) with log rotation
+- System logging (dmesg, OpenRC, syslog) with log rotation
 - Built-in task scheduler (cron)
 
 ## Requirements
@@ -31,7 +31,7 @@ Download the distribution for your architecture and install it by double-clickin
 Download the image for your architecture and install it with:
 
 ``` powershell
-wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.23.2-3-x86_64.wsl
+wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.23.2-4-x86_64.wsl
 ```
 
 ### Using an additional WSL distributions list
