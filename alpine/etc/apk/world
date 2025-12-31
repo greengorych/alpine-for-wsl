@@ -8,6 +8,8 @@ busybox
 busybox-openrc
 ca-certificates
 cloud-init
+curl
+doas
 e2fsprogs-extra
 logrotate
 mdevd
