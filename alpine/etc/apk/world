@@ -11,6 +11,7 @@ cloud-init
 curl
 doas
 e2fsprogs-extra
+git
 logrotate
 mdevd
 musl-utils
