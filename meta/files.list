@@ -8,4 +8,4 @@ etc/wsl.conf                        /etc/wsl.conf                       644
 etc/wsl-distribution.conf           /etc/wsl-distribution.conf          644
 usr/lib/wsl/alpine.ico              /usr/lib/wsl//alpine.ico            644
 # usr/lib/wsl/oobe-script             /usr/lib/wsl/oobe-script            755
-# usr/lib/wsl/terminal-profile.json   /usr/lib/wsl/terminal-profile.json  644
+usr/lib/wsl/terminal-profile.json   /usr/lib/wsl/terminal-profile.json  644

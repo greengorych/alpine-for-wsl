@@ -1,0 +1,38 @@
+{
+  "profiles": [
+    {
+      "colorScheme": "Alpine",
+      "suppressApplicationTitle": true,
+      "cursorShape": "underscore",
+      "font": {
+        "face": "Cascadia Mono",
+        "size": 12
+      }
+    }
+  ],
+  "schemes": [
+    {
+      "name": "Alpine",
+      "background": "#0B0F14",
+      "foreground": "#E6E8EB",
+      "cursorColor": "#FFFFFF",
+      "selectionBackground": "#1C2A3A",
+      "black": "#1B2330",
+      "red": "#CC4E4E",
+      "green": "#33B07A",
+      "yellow": "#C7A645",
+      "blue": "#0D89D0",
+      "purple": "#8E6AC8",
+      "cyan": "#4CB3D4",
+      "white": "#D0D4D8",
+      "brightBlack": "#5B6675",
+      "brightRed": "#E06666",
+      "brightGreen": "#4FD59A",
+      "brightYellow": "#E4BF52",
+      "brightBlue": "#16A2FF",
+      "brightPurple": "#A884E8",
+      "brightCyan": "#6EDCF2",
+      "brightWhite": "#FFFFFF"
+    }
+  ]
+}
