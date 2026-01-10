@@ -72,7 +72,7 @@ wsl --install Alpine
 ```
 
 > [!NOTE]
-> More information about an additional WSL distribution list are available on this [page][Additional WSL distributions list].
+> More information about an additional WSL distribution list are available on this [page][additional-wsl-distributions-list].
 
 ### Contributing
 
@@ -91,4 +91,4 @@ Alpine Linux consists of software distributed under various open-source licenses
 This project distributes Alpine Linux packages without modification.
 
 [MIT license]: https://github.com/greengorych/alpine-wsl-test/blob/main/LICENSE-MIT.md
-[Additional WSL distributions list]: https://greengorych.io/reference/distributions-list/
+[additional-wsl-distributions-list]: https://greengorych.io/projects/additional-wsl-distributions-list/
