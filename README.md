@@ -74,7 +74,7 @@ wsl --install Alpine
 > [!NOTE]
 > More information about an additional WSL distribution list are available on this [page][additional-wsl-distributions-list].
 
-### Contributing
+## Contributing
 
 Issues, bug reports, and improvement suggestions are welcome.
 
