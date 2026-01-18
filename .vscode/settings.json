@@ -14,5 +14,8 @@
   "files.trimTrailingWhitespace": true,
   "[markdown]": {
     "editor.wordWrap": "on"
+  },
+  "[shellscript]": {
+    "editor.tabSize": 4
   }
 }
