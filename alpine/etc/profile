@@ -1,24 +1,66 @@
-export PATH="$PATH"
+# Default system PATH used when PATH is not set
+DEFAULT_PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-export PAGER=less
-umask 022
+# Initialize empty PATH buffer
+NEW_PATH=""
 
-# use nicer PS1 for bash and busybox ash
-if [ -n "$BASH_VERSION" -o "$BB_ASH_VERSION" ]; then
-        PS1='\h:\w\$ '
-# use nicer PS1 for zsh
-elif [ -n "$ZSH_VERSION" ]; then
-        PS1='%m:%~%# '
-# set up fallback default PS1
+# Define ':' as PATH separator
+IFS=":"
+
+# Select source PATH
+
+# Define existing PATH from environment
+if [ -n "$PATH" ]
+then
+    SOURCE_PATH="$PATH"
+# Define fallback to default PATH
 else
-        : "${HOSTNAME:=$(hostname)}"
-        PS1='${HOSTNAME%%.*}:$PWD'
-        [ "$(id -u)" -eq 0 ] && PS1="${PS1}# " || PS1="${PS1}\$ "
+    SOURCE_PATH="$DEFAULT_PATH"
 fi
 
-for script in /etc/profile.d/*.sh ; do
-        if [ -r "$script" ] ; then
-                . "$script"
-        fi
+# Build PATH containing only existing directories
+for DIR in $SOURCE_PATH
+do
+    [ -d "$DIR" ] || continue
+    if [ -z "$NEW_PATH" ]; then
+        NEW_PATH="$DIR"
+    else
+        NEW_PATH="$NEW_PATH:$DIR"
+    fi
 done
-unset script
+
+# Export sanitized PATH
+export PATH="$NEW_PATH"
+
+# Define default pager
+export PAGER=less
+
+# Define default file creation mode
+umask 022
+
+# Use nicer PS1 for bash and busybox ash
+if [ -n "$BASH_VERSION" -o "$BB_ASH_VERSION" ]
+then
+    PS1='\h:\w\$ '
+# Use nicer PS1 for zsh
+elif [ -n "$ZSH_VERSION" ]
+then
+    PS1='%m:%~%# '
+# Set up fallback default PS1
+else
+    : "${HOSTNAME:=$(hostname)}"
+    PS1='${HOSTNAME%%.*}:$PWD'
+    [ "$(id -u)" -eq 0 ] && PS1="${PS1}# " || PS1="${PS1}\$ "
+fi
+
+# Load additional profile scripts
+for script in /etc/profile.d/*.sh
+do
+    if [ -r "$SCRIPT" ]
+    then
+        . "$SCRIPT"
+    fi
+done
+
+# Cleanup temporary variables
+unset DEFAULT_PATH DIR IFS NEW_PATH SCRIPT SOURCE_PATH
