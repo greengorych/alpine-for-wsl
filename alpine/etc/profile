@@ -1,8 +1,8 @@
 # Default system PATH used when PATH is not set
-DEFAULT_PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+default_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # Initialize empty PATH buffer
-NEW_PATH=""
+new_path=""
 
 # Define ':' as PATH separator
 IFS=":"
@@ -12,25 +12,25 @@ IFS=":"
 # Define existing PATH from environment
 if [ -n "$PATH" ]
 then
-    SOURCE_PATH="$PATH"
+    source_path="$PATH"
 # Define fallback to default PATH
 else
-    SOURCE_PATH="$DEFAULT_PATH"
+    source_path="$default_path"
 fi
 
 # Build PATH containing only existing directories
-for DIR in $SOURCE_PATH
+for dir in $source_path
 do
-    [ -d "$DIR" ] || continue
-    if [ -z "$NEW_PATH" ]; then
-        NEW_PATH="$DIR"
+    [ -d "$dir" ] || continue
+    if [ -z "$new_path" ]; then
+        new_path="$dir"
     else
-        NEW_PATH="$NEW_PATH:$DIR"
+        new_path="$new_path:$dir"
     fi
 done
 
 # Export sanitized PATH
-export PATH="$NEW_PATH"
+export PATH="$new_path"
 
 # Define default pager
 export PAGER=less
@@ -56,11 +56,11 @@ fi
 # Load additional profile scripts
 for script in /etc/profile.d/*.sh
 do
-    if [ -r "$SCRIPT" ]
+    if [ -r "$script" ]
     then
-        . "$SCRIPT"
+        . "$script"
     fi
 done
 
 # Cleanup temporary variables
-unset DEFAULT_PATH DIR IFS NEW_PATH SCRIPT SOURCE_PATH
+unset default_path dir IFS new_path script source_path
