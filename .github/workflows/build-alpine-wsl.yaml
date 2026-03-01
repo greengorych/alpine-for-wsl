@@ -155,7 +155,7 @@ jobs:
 
     steps:
       - name: Download Alpine ${{ github.ref_name }} ${{ matrix.arch }} artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: alpine-${{ github.ref_name }}-${{ matrix.arch }}
 
@@ -192,7 +192,7 @@ jobs:
 
     steps:
       - name: Download artifacts Alpine ${{ github.ref_name }}
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
 
       - name: Release Alpine ${{ github.ref_name }}
         uses: softprops/action-gh-release@v2
