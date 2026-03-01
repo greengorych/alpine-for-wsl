@@ -131,7 +131,7 @@ jobs:
           sha256sum alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}
           path: |
