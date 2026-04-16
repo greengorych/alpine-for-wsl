@@ -77,6 +77,12 @@ jobs:
         run: |
           sudo cp /usr/bin/qemu-aarch64-static ${{ matrix.arch }}/usr/bin/
 
+      - name: Update Distribution Name
+        run: |
+          set -euo pipefail
+
+          sed -i "s/^defaultName = .*/defaultName = Alpine-${ALPINE_VERSION}/" alpine/etc/wsl-distribution.conf
+
       - name: Set Up Distribution
         run: |
           set -euo pipefail
