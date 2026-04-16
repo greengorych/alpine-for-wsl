@@ -1,4 +1,4 @@
-name: Build and release Alpine for WSL
+name: Build and Release Alpine for WSL
 run-name: Build and Release Alpine ${{ github.ref_name }}
 
 on:
@@ -24,7 +24,7 @@ jobs:
           - aarch64
 
     steps:
-      - name: Checkout sources
+      - name: Checkout Sources
         uses: actions/checkout@v6
 
       - name: Define variables
@@ -49,14 +49,14 @@ jobs:
             echo "ALPINE_ROOTFS_SHA_URL=$ALPINE_ROOTFS_SHA_URL"
           } >> "$GITHUB_ENV"
 
-      - name: Install arm64 dependencies
+      - name: Install arm64 Dependencies
         if: matrix.arch == 'aarch64'
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static binfmt-support
           sudo update-binfmts --enable qemu-aarch64
 
-      - name: Download and verify distribution
+      - name: Download and Verify Distribution
         run: |
           set -euo pipefail
 
@@ -64,7 +64,7 @@ jobs:
           wget -O ${{ env.ALPINE_ROOTFS_SHA }} ${{ env.ALPINE_ROOTFS_SHA_URL }}
           sha256sum -c ${{ env.ALPINE_ROOTFS_SHA }}
 
-      - name: Prepare distribution
+      - name: Prepare Distribution
         run: |
           set -euo pipefail
 
@@ -72,12 +72,12 @@ jobs:
           sudo tar -xzf ${{ env.ALPINE_ROOTFS }} -C ${{ matrix.arch }}
           sudo cp /etc/resolv.conf ${{ matrix.arch }}/etc/resolv.conf
 
-      - name: Add arm64 specific build dependency
+      - name: Add arm64 Specific Build Dependency
         if: matrix.arch == 'aarch64'
         run: |
           sudo cp /usr/bin/qemu-aarch64-static ${{ matrix.arch }}/usr/bin/
 
-      - name: Set up distribution
+      - name: Set Up Distribution
         run: |
           set -euo pipefail
 
@@ -103,7 +103,7 @@ jobs:
           sudo chroot "${{ matrix.arch }}" ln -sf /init /usr/bin/wslinfo
           sudo chroot "${{ matrix.arch }}" ln -sf /init /usr/bin/wslpath
 
-      - name: Set up services
+      - name: Set Up Services
         run: |
           set -euo pipefail
 
@@ -119,7 +119,7 @@ jobs:
 
           done < meta/services.list
 
-      - name: Pack distribution
+      - name: Pack Distribution
         run: |
           set -euo pipefail
 
@@ -130,7 +130,7 @@ jobs:
             | gzip -9 > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl
           sha256sum alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl > alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}.wsl.sha256
 
-      - name: Upload artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v6
         with:
           name: alpine-${{ env.ALPINE_RELEASE }}-${{ matrix.arch }}
@@ -164,7 +164,7 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Prepare test environment
+      - name: Prepare Test Environment
         run: |
           set -euo pipefail
 
@@ -191,7 +191,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Download artifacts Alpine ${{ github.ref_name }}
+      - name: Download Artifacts Alpine ${{ github.ref_name }}
         uses: actions/download-artifact@v8
 
       - name: Release Alpine ${{ github.ref_name }}
