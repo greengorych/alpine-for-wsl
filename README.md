@@ -1,8 +1,9 @@
 # Alpine Linux for WSL
 
-This project provides a ready-to-use Alpine Linux distribution for the Windows Subsystem for Linux (WSL).
+This project provides a ready-to-use Alpine-based Linux distribution for the Windows Subsystem for Linux (WSL).
 
 > [!IMPORTANT]
+> - This is an unofficial Alpine-based WSL build and is not maintained by the Alpine Linux project.
 > - The distribution is still under active development and testing and may have limited functionality.
 > - The arm64 build has not yet been fully tested.
 
@@ -31,7 +32,7 @@ Download the distribution for your architecture and install it by double-clickin
 Download the image for your architecture and install it with:
 
 ``` powershell
-wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.23.2-4-x86_64.wsl
+wsl --install --from-file C:\Users\<UserName>\Download\alpine-3.24.1-1-x86_64.wsl
 ```
 
 ### Using an additional WSL distributions list
